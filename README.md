@@ -34,3 +34,32 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Automation (Contact submissions)
+
+This project previously used external automation webhooks (Zapier) for `app/api/contact`. The repository now contains an in-house automation handler that:
+
+- Persists contact submissions to `data/contacts.jsonl` (JSON Lines format).
+- Optionally sends a notification email using Resend when the following env vars are configured:
+
+  - `RESEND_API_KEY` — your Resend API key
+  - `NOTIFY_EMAIL` — destination email for notifications
+  - `FROM_EMAIL` — verified sender email
+
+  PushPress integration:
+
+  - `PUSHPRESS_API_URL` — the PushPress API endpoint or webhook URL to create leads (e.g. https://api.pushpress.com/v1/leads). If set, submissions will be POSTed to this URL.
+  - `PUSHPRESS_API_KEY` — optional API key/token; when provided it will be sent as `Authorization: Bearer <key>`.
+
+  If you want the application to create leads in PushPress automatically, set these environment variables in your deployment. The in-house automation will persist contacts locally to `data/contacts.jsonl` and then attempt to forward them to PushPress when configured.
+
+Migration notes:
+
+- There are no remaining Zapier webhook calls in the codebase. If you relied on Zapier to forward contacts to other services, recreate any Zapier workflows using the persisted `data/contacts.jsonl` or integrate directly with your target service using a small script that reads that file.
+- To run the included check, use:
+
+```bash
+npm test
+```
+
+This will run a small test that verifies contact submissions are persisted.
