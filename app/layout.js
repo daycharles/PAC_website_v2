@@ -1,6 +1,7 @@
 import './globals.css';
 import { Inter } from 'next/font/google';
 import Head from 'next/head';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -18,6 +19,7 @@ export default function RootLayout({ children }) {
       </Head>
       <body className={inter.className}>
         {children}
+        <SpeedInsights />
         <footer className="footer">
           <p>Power Alley CrossFit is an independently owned and operated affiliate of CrossFit, LLC.</p>
           <p>CrossFit® is a registered trademark of CrossFit, LLC.</p>
